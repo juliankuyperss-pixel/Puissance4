@@ -1,4 +1,5 @@
 package business;
+
 /**
  * Cette classe regroupe les constantes,
  * Elle définit les dimensions de la grille.

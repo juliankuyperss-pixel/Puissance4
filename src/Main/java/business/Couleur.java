@@ -1,4 +1,5 @@
 package business;
+
 /**
  * Représente la couleur d'un jeton ou d'un joueur dans le jeu Puissance 4.
  * Cette énumération est utilisée pour identifier à qui appartient un jeton

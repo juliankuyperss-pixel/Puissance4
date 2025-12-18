@@ -1,21 +1,40 @@
 package business;
 
 /**
- * Représente le jeton du jeu Puissance4.
- * Le jeton posséde une couleur.
+ * Représente un jeton du jeu Puissance 4.
+ * <p>
+ * Un jeton est caractérisé par sa couleur.
+ * </p>
  */
 public class Jeton {
+
     private Couleur couleur;
 
     /**
-     * la couleur du jeton
-     * @param Couleur la couleur du jeton a créer.
+     * Construit un nouveau jeton avec la couleur spécifiée.
+     *
+     * @param couleur la couleur du jeton.
      */
-    public Jeton(Couleur Couleur) {
-        this.Couleur = Couleur;
+    public Jeton(Couleur couleur) {
+        this.couleur = couleur;
     }
 
+    /**
+     * Récupère la couleur de ce jeton.
+     *
+     * @return la couleur du jeton.
+     */
     public Couleur getCouleur() {
         return couleur;
+    }
+
+    /**
+     * Retourne une représentation textuelle du jeton.
+     *
+     * @return une chaîne décrivant le jeton (ex: "Jeton{couleur=ROUGE}").
+     */
+    @Override
+    public String toString() {
+        return "Jeton{couleur=" + couleur + "}";
     }
 }
