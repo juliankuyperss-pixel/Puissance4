@@ -1,4 +1,5 @@
-package business;
+package TestUnitaire;
+import business.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
