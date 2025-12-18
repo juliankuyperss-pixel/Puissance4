@@ -1,12 +1,12 @@
 package business;
-
+import java.io.Serializable;
 /**
  * Représente une position (coordonnées ligne, colonne) sur la grille.
  * <p>
  * Cette classe permet de manipuler les coordonnées des cases du jeu.
  * </p>
  */
-public class Position {
+public class Position implements Serializable{
 
     private int ligne;
     private int colonne;
@@ -25,7 +25,6 @@ public class Position {
         this.ligne = ligne;
         this.colonne = colonne;
     }
-
     /**
      * Récupère l'indice de la ligne.
      *

@@ -1,12 +1,12 @@
 package business;
-
+import java.io.Serializable;
 /**
  * Représente un joueur du jeu Puissance 4.
  * <p>
  * Un joueur est identifié par la couleur de ses pions.
  * </p>
  */
-public class Joueur {
+public class Joueur implements Serializable{
 
     private final Couleur nom;
 

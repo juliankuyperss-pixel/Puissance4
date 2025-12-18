@@ -1,12 +1,12 @@
 package business;
-
+import java.io.Serializable;
 /**
  * Représente un jeton du jeu Puissance 4.
  * <p>
  * Un jeton est caractérisé par sa couleur.
  * </p>
  */
-public class Jeton {
+public class Jeton implements Serializable{
 
     private Couleur couleur;
 

@@ -1,52 +1,46 @@
 package view;
 
 import business.*;
+import java.io.IOException;
 import java.util.Scanner;
 
-/**
- * Vue principale du jeu Puissance 4 (Interface Console).
- * <p>
- * Cette classe contient le point d'entrée du programme (main) et gère
- * les interactions avec l'utilisateur (affichage de la grille, lecture des coups, affichage du gagnant).
- * </p>
- */
 public class MainView {
-
     private static Scanner scanner = new Scanner(System.in);
 
-    /**
-     * Point d'entrée principal de l'application.
-     * <p>
-     * Cette méthode initialise une nouvelle partie, lance la boucle de jeu (tour par tour),
-     * gère les saisies utilisateur (choix de colonne ou abandon) et attrape les erreurs.
-     * Enfin, elle affiche le résultat final (Gagnant, Match Nul ou Abandon).
-     * </p>
-     *
-     * @param args les arguments de la ligne de commande (non utilisés ici).
-     */
     public static void main(String[] args) {
-        Puissance4 jeu = new Puissance4();
-
         System.out.println("Bienvenue au jeu Puissance4 !");
+
+        // --- 1. PROPOSER DE CHARGER LA PARTIE ---
+        Puissance4 jeu = demarrerJeu();
 
         while (!jeu.gameIsOver()) {
             display(jeu.getPartie());
 
-            Joueur jouerCourant = jeu.getPartie().getJoueurCourant();
-            System.out.println("Tour du joueur :" + jouerCourant.getNom());
+            Joueur joueurCourant = jeu.getPartie().getJoueurCourant();
+            System.out.println("Tour du joueur : " + joueurCourant.getNom());
 
-            System.out.println("Entrez le numéro de colonne (0 à " + (Grille.NB_COLONNES - 1) + ") ou -1 pour abandonner :");
+            // On ajoute l'option -2 pour sauvegarder
+            System.out.println("Entrez colonne (0-" + (Grille.NB_COLONNES - 1) + "), -1 (Abandon), -2 (Sauvegarder & Quitter) :");
 
             try {
                 if (!scanner.hasNextInt()) {
                     System.out.println("Erreur : Veuillez entrer un nombre entier.");
-                    scanner.next(); // Vide le tampon du scanner
+                    scanner.next();
                     continue;
                 }
                 int choix = scanner.nextInt();
 
                 if (choix == -1) {
                     jeu.abandonner();
+                } else if (choix == -2) {
+                    // --- 2. GESTION DE LA SAUVEGARDE ---
+                    try {
+                        SauvegardeManager.sauvegarder(jeu.getPartie());
+                        System.out.println("Partie sauvegardée avec succès ! A bientôt.");
+                        return; // On arrête le programme proprement
+                    } catch (IOException e) {
+                        System.out.println("ERREUR lors de la sauvegarde : " + e.getMessage());
+                    }
                 } else {
                     jeu.jouer(choix);
                 }
@@ -58,13 +52,12 @@ public class MainView {
             }
         }
 
-        // Affichage final
+        // Fin de partie standard
         display(jeu.getPartie());
-
+        // ... (ton code de fin de partie reste identique)
         if (jeu.getPartie().isParAbandon()) {
             System.out.println("La partie s'est terminée par un ABANDON.");
         }
-
         Joueur gagnant = jeu.getPartie().getGagnant();
         if (gagnant != null) {
             System.out.println("LE GAGNANT EST : " + gagnant.getNom() + " !!!");
@@ -75,26 +68,44 @@ public class MainView {
         scanner.close();
     }
 
-    /**
-     * Affiche l'état visuel de la grille dans la console.
-     * <p>
-     * Cette méthode parcourt le plateau de jeu et affiche les jetons sous forme de caractères :
-     * <ul>
-     * <li>'R' pour un jeton ROUGE</li>
-     * <li>'J' pour un jeton JAUNE</li>
-     * <li>'.' pour une case vide (null)</li>
-     * </ul>
-     * Elle affiche également les indices de colonnes pour guider le joueur.
-     * </p>
-     *
-     * @param partie l'objet Partie contenant la grille à afficher.
-     */
+    // --- NOUVELLE MÉTHODE POUR GÉRER LE MENU DE DÉPART ---
+    private static Puissance4 demarrerJeu() {
+        System.out.println("1. Nouvelle Partie");
+        System.out.println("2. Charger la dernière partie");
+        System.out.print("Votre choix : ");
+
+        int choix = 0;
+        if (scanner.hasNextInt()) {
+            choix = scanner.nextInt();
+        } else {
+            scanner.next(); // vider le buffer
+        }
+
+        if (choix == 2) {
+            try {
+                Partie partieSauvegardee = SauvegardeManager.charger();
+                if (partieSauvegardee != null) {
+                    System.out.println("Partie chargée !");
+                    // On utilise le constructeur que tu m'as montré dans ton image !
+                    return new Puissance4(partieSauvegardee);
+                } else {
+                    System.out.println("Aucune sauvegarde trouvée. Création d'une nouvelle partie.");
+                }
+            } catch (Exception e) {
+                System.out.println("Erreur au chargement (fichier corrompu ?). Nouvelle partie lancée.");
+            }
+        }
+        return new Puissance4(); // Nouvelle partie par défaut
+    }
+
     public static void display(Partie partie) {
+        // ... (Ta méthode display reste identique, ne change rien ici)
         Grille grille = partie.getGrille();
         Jeton[][] plateau = grille.getJetons();
 
         System.out.println("\n 0 1 2 3 4 5 6");
         System.out.println("---------------");
+
 
         for (int i = 0; i < Grille.NB_LIGNES; i++) {
             System.out.print("|");
@@ -103,6 +114,7 @@ public class MainView {
                 if (jeton == null) {
                     System.out.print(".");
                 } else {
+
                     if (jeton.getCouleur() == Couleur.ROUGE) {
                         System.out.print("R");
                     } else {

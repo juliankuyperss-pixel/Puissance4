@@ -1,5 +1,5 @@
 package business;
-
+import java.io.Serializable;
 /**
  * Représente la grille de jeu du Puissance 4.
  * <p>
@@ -8,7 +8,7 @@ package business;
  * et la détection des alignements gagnants (4 à la suite).
  * </p>
  */
-public class Grille {
+public class Grille implements Serializable{
 
     /**
      * Le nombre de lignes de la grille (standard : 6).

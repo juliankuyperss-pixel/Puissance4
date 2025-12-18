@@ -1,4 +1,5 @@
 package business;
+import java.io.Serializable;
 
 import java.util.Random;
 import java.util.Arrays; // Import nécessaire pour le toString des tableaux
@@ -11,7 +12,7 @@ import java.util.Arrays; // Import nécessaire pour le toString des tableaux
  * (finie, gagnée, abandonnée).
  * </p>
  */
-public class Partie {
+public class Partie implements Serializable{
 
     private Grille grille;
     private Joueur[] joueurs;
